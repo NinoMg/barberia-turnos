@@ -1,4 +1,4 @@
-const API_URL = "https://barberia-api.onrender.com";
+const API_URL = "https://barberia-api-zdjb.onrender.com";   
 
 const form = document.getElementById("formTurno");
 const mensaje = document.getElementById("mensaje");

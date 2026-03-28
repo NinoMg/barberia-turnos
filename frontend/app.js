@@ -1,9 +1,11 @@
+const API_URL = "https://barberia-api.onrender.com";
+
 const form = document.getElementById("formTurno");
 const mensaje = document.getElementById("mensaje");
 
 // 🔹 Cargar turnos
 async function cargarTurnos() {
-  const res = await fetch("http://127.0.0.1:5000/turnos");
+  const res = await fetch(`${API_URL}/turnos`);
   const turnos = await res.json();
 
   const lista = document.getElementById("listaTurnos");
@@ -21,9 +23,9 @@ async function cargarTurnos() {
   });
 }
 
-//3. 🔥 FUNCIÓN turnoOcupado
+// 🔥 VALIDACIÓN
 async function turnoOcupado(fecha, hora) {
-  const res = await fetch("http://127.0.0.1:5000/turnos");
+  const res = await fetch(`${API_URL}/turnos`);
   const turnos = await res.json();
 
   return turnos.some(turno => 
@@ -38,7 +40,6 @@ form.addEventListener("submit", async (e) => {
   const fecha = document.getElementById("fecha").value;
   const hora = document.getElementById("hora").value;
 
-  // 🔥 VALIDACIÓN FRONTEND
   if (await turnoOcupado(fecha, hora)) {
     mensaje.textContent = "Ese horario ya está ocupado";
     return;
@@ -50,7 +51,7 @@ form.addEventListener("submit", async (e) => {
     hora
   };
 
-  const res = await fetch("http://127.0.0.1:5000/turnos", {
+  const res = await fetch(`${API_URL}/turnos`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -60,18 +61,14 @@ form.addEventListener("submit", async (e) => {
 
   const data = await res.json();
 
-if (!res.ok) {
-  mensaje.textContent = data.error;
-} else {
-  mensaje.textContent = data.mensaje;
-}
+  mensaje.textContent = res.ok ? data.mensaje : data.error;
 
   cargarTurnos();
 });
 
 // 🔹 Eliminar turno
 async function eliminarTurno(index) {
-  await fetch(`http://127.0.0.1:5000/turnos/${index}`, {
+  await fetch(`${API_URL}/turnos/${index}`, {
     method: "DELETE"
   });
 

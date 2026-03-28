@@ -12,7 +12,7 @@ def home():
 
 @app.route("/turnos", methods=["GET"])
 def obtener_turnos():
-    return jsonify(turnos)
+    return jsonify(list(turnos))
 
 @app.route("/turnos", methods=["POST"])
 def crear_turno():

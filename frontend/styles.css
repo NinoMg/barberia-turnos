@@ -71,3 +71,8 @@ li button {
 li button:hover {
   background: #dc2626;
 }
+
+.hora-btn.ocupado {
+  background: #ccc;
+  cursor: not-allowed;
+}

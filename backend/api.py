@@ -13,34 +13,20 @@ headers = {
 }
 
 app = Flask(__name__)
-
 CORS(app)
 
 @app.route("/")
 def home():
     return "API Barbería funcionando con Supabase"
 
+# GET
 @app.route("/turnos", methods=["GET"])
 def obtener_turnos():
     res = requests.get(f"{SUPABASE_URL}/rest/v1/turnos", headers=headers)
     return jsonify(res.json())
 
+# POST
 @app.route("/turnos", methods=["POST"])
-def crear_turno():
-    data = request.json
-
-    if not data:
-        return jsonify({"error": "Datos inválidos"}), 400
-
-    params = {
-        "fecha": f"eq.{data['fecha']}",
-        "hora": f"eq.{data['hora']}"
-    }
-
-    check = requests.get(
-        f"{SUPABASE_URL}/rest/v1/turnos",
-        headers=headers,
-        @app.route("/turnos", methods=["POST"])
 def crear_turno():
     data = request.json
 
@@ -61,22 +47,19 @@ def crear_turno():
     if len(check.json()) > 0:
         return jsonify({"error": "Horario no disponible"}), 400
 
-    # 🔥 CAPTURAR RESPUESTA REAL
     res = requests.post(
         f"{SUPABASE_URL}/rest/v1/turnos",
         json=data,
         headers=headers
     )
 
-    print("SUPABASE STATUS:", res.status_code)
-    print("SUPABASE RESPUESTA:", res.text)
-
     return jsonify({
         "mensaje": "Turno reservado",
-        "supabase_status": res.status_code,
-        "supabase_response": res.text
+        "status": res.status_code,
+        "respuesta": res.text
     }), 201
 
+# DELETE
 @app.route("/turnos/<int:id>", methods=["DELETE"])
 def eliminar_turno(id):
     requests.delete(
@@ -86,13 +69,15 @@ def eliminar_turno(id):
 
     return jsonify({"mensaje": "Turno eliminado"})
 
+# CORS manual fix
 @app.after_request
 def after_request(response):
-    response.headers.add("Access-Control-Allow-Origin", "https://ninomg.github.io")
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-    response.headers.add("Access-Control-Allow-Methods", "GET,POST,DELETE,OPTIONS")
+    response.headers["Access-Control-Allow-Origin"] = "https://ninomg.github.io"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "GET,POST,DELETE,OPTIONS"
     return response
 
+# OPTIONS (preflight)
 @app.route("/turnos", methods=["OPTIONS"])
 def turnos_options():
     return '', 200

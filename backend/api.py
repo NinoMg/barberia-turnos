@@ -14,15 +14,7 @@ headers = {
 
 app = Flask(__name__)
 
-CORS(
-    app,
-    resources={
-        r"/turnos*": {
-            "origins": "https://ninomg.github.io"
-        }
-    },
-    supports_credentials=True
-)
+CORS(app)
 
 @app.route("/")
 def home():
@@ -77,6 +69,10 @@ def after_request(response):
     response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
     response.headers.add("Access-Control-Allow-Methods", "GET,POST,DELETE,OPTIONS")
     return response
+
+@app.route("/turnos", methods=["OPTIONS"])
+def turnos_options():
+    return '', 200
 
 if __name__ == "__main__":
     app.run(debug=True)

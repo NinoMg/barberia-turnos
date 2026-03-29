@@ -16,8 +16,12 @@ app = Flask(__name__)
 
 CORS(
     app,
-    resources={r"/*": {"origins": "*"}},
-    methods=["GET", "POST", "DELETE", "OPTIONS"]
+    resources={
+        r"/turnos*": {
+            "origins": "https://ninomg.github.io"
+        }
+    },
+    supports_credentials=True
 )
 
 @app.route("/")
@@ -66,6 +70,13 @@ def eliminar_turno(id):
     )
 
     return jsonify({"mensaje": "Turno eliminado"})
+
+@app.after_request
+def after_request(response):
+    response.headers.add("Access-Control-Allow-Origin", "https://ninomg.github.io")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    response.headers.add("Access-Control-Allow-Methods", "GET,POST,DELETE,OPTIONS")
+    return response
 
 if __name__ == "__main__":
     app.run(debug=True)

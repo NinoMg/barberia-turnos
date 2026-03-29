@@ -40,19 +40,42 @@ def crear_turno():
     check = requests.get(
         f"{SUPABASE_URL}/rest/v1/turnos",
         headers=headers,
+        @app.route("/turnos", methods=["POST"])
+def crear_turno():
+    data = request.json
+
+    if not data:
+        return jsonify({"error": "Datos inválidos"}), 400
+
+    params = {
+        "fecha": f"eq.{data['fecha']}",
+        "hora": f"eq.{data['hora']}"
+    }
+
+    check = requests.get(
+        f"{SUPABASE_URL}/rest/v1/turnos",
+        headers=headers,
         params=params
     )
 
     if len(check.json()) > 0:
         return jsonify({"error": "Horario no disponible"}), 400
 
-    requests.post(
+    # 🔥 CAPTURAR RESPUESTA REAL
+    res = requests.post(
         f"{SUPABASE_URL}/rest/v1/turnos",
         json=data,
         headers=headers
     )
 
-    return jsonify({"mensaje": "Turno reservado"}), 201
+    print("SUPABASE STATUS:", res.status_code)
+    print("SUPABASE RESPUESTA:", res.text)
+
+    return jsonify({
+        "mensaje": "Turno reservado",
+        "supabase_status": res.status_code,
+        "supabase_response": res.text
+    }), 201
 
 @app.route("/turnos/<int:id>", methods=["DELETE"])
 def eliminar_turno(id):

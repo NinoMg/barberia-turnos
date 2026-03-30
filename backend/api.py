@@ -48,10 +48,14 @@ def crear_turno():
         return jsonify({"error": "Horario no disponible"}), 400
 
     res = requests.post(
-        f"{SUPABASE_URL}/rest/v1/turnos",
-        json=data,
-        headers=headers
-    )
+    f"{SUPABASE_URL}/rest/v1/turnos",
+    json={
+        "nombre": data["cliente"],  
+        "fecha": data["fecha"],
+        "hora": data["hora"]
+    },
+    headers=headers
+)
 
     return jsonify({
         "mensaje": "Turno reservado",

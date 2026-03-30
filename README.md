@@ -38,3 +38,35 @@ API: https://barberia-api-zdjb.onrender.com/turnos
 ## 🔌 Arquitectura
 
 Frontend desacoplado consumiendo API REST:
+
+Frontend (GitHub Pages)
+↓
+API REST (Flask en Render)
+↓
+Base de datos (Supabase)
+
+
+---
+
+## 🧪 Desafíos técnicos resueltos
+
+- Implementación de CORS en entorno productivo
+- Manejo de estados asíncronos con fetch
+- Integración con API externa (Supabase REST)
+- Validación de consistencia de datos (turnos únicos)
+- Debugging en entorno real (deploy + red)
+
+---
+
+## 📌 Próximas mejoras
+
+- Autenticación de usuarios
+- Panel de administración
+- Notificaciones
+- Mejora de UX/UI
+
+---
+
+## 💼 Autor
+
+Nino – Desarrollador Web Junior  
